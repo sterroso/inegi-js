@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Índice inflacionario actualizado</title>
+    <link rel="stylesheet" href="style/normal.css">
+</head>
+<body>
+    <header>
+        <h1>Tabla de INPC e inflación actualizados</h1>
+        <h2>Año base: 2018</h2>
+    </header>
+
+    <main>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Año</th>
+                    <th>Mes</th>
+                    <th>INPC</th>
+                    <th>inflación mensual</th>
+                    <th>Inflación interanual</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td class="data-cell numeric-data-cell year-cell"></td>
+                    <td class="data-cell numeric-data-cell month-cell"></td>
+                    <td class="data-cell numeric-data-cell index-cell"></td>
+                    <td class="data-cell numeric-data-cell inflation-cell"></td>
+                    <td class="data-cell numeric-data-cell inflation-cell"></td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <footer>
+        <h4>Notas</h4>
+        <ol class="footnotes">
+            <li class="footnote"><a name="fuente"><strong>Fuente</strong>:</a> Instituto Nacional de Geografía y Estadística.</li>
+        </ol>
+    </footer>
+    <script src="js/query.js"></script>
+</body>
+</html>
