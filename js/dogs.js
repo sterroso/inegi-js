@@ -17,6 +17,9 @@ const breedsIndex = document.getElementById('breeds-index');
 // Elemento div que contiene el contenido del diccionario de razas de perros.
 const breedsContainer = document.getElementById('breeds-container');
 
+// Logo de sincronización
+const syncIcon = document.getElementById('sync-icon');
+
 /**
  * Devuelve todas las razas de perros registradas en la API.
  * 
@@ -192,13 +195,10 @@ const fillBreedsLists = async () => {
     const breedsFragment = document.createDocumentFragment();
 
     // Título para el fragmento de razas de perros.
-    const breedsTitleContainer = document.createElement('div');
-    breedsTitleContainer.classList.add('breeds-title-container');
     const breedsTitle = document.createElement('h2');
     breedsTitle.classList.add('breeds-title');
     breedsTitle.textContent = 'Diccionario de Razas';
-    breedsTitleContainer.appendChild(breedsTitle);
-    breedsFragment.appendChild(breedsTitleContainer);
+    breedsFragment.appendChild(breedsTitle);
 
     const breedsDiv = document.createElement('div');
     breedsDiv.classList.add('breeds');

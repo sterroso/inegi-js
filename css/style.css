@@ -58,6 +58,20 @@ a {
     color: #e7f6f2;
 }
 
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.container #header .button-container #get-breeds .in-sync {
+    animation: spin 0.5s infinite linear;
+}
+
 .container #header .button-container #get-breeds:hover,
 .container #header .button-container #get-breeds:active,
 .container #header .button-container #get-breeds:visited {
@@ -122,52 +136,63 @@ box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
-.container #main #breeds-dictionary #breeds-container .breeds-container-title {
+.container #main #breeds-dictionary #breeds-container .breeds-title {
     background-color: #ffeeee;
     border-bottom: solid thin #0a0a0a;
     padding: 0 0.25rem 0.25rem;
     margin-bottom: 0.75rem;
 }
 
-.container #main #breeds-dictionary #breeds-container .alphabetic-container {
+.container #main #breeds-dictionary #breeds-container .breeds {
+    display: flex;
+    flex-direction: column;
+}
+
+.container #main #breeds-dictionary #breeds-container .breeds .alphabetic-container {
     margin: 0 2rem 1.75rem;
     border-top: solid medium #0a0a0a;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
-.container #main #breeds-dictionary #breeds-container .alphabetic-container .letter-title {
+.container #main #breeds-dictionary #breeds-container .breeds .alphabetic-container .letter-title {
     padding: 0 0.5rem;
     background-color: #eeeeee;
     border-bottom: solid thin #0a0a0a;
 }
 
-.container #main #breeds-dictionary #breeds-container .alphabetic-container .breed-list {
+.container #main #breeds-dictionary #breeds-container .breeds .alphabetic-container .breed-list {
     padding: 0 1rem;
 }
 
-.container #main #breeds-dictionary #breeds-container .alphabetic-container .goto-index {
+.container #main #breeds-dictionary #breeds-container .breeds .alphabetic-container .goto-index {
     text-align: end;
     margin: 0.75rem 0.5rem 0.75rem 0;
 }
 
-.container #main #breeds-dictionary #breeds-container .alphabetic-container .goto-index .link:link,
-.container #main #breeds-dictionary #breeds-container .alphabetic-container .goto-index .link:active,
-.container #main #breeds-dictionary #breeds-container .alphabetic-container .goto-index .link:visited {
+.container #main #breeds-dictionary #breeds-container .breeds .alphabetic-container .goto-index .link:link,
+.container #main #breeds-dictionary #breeds-container .breeds .alphabetic-container .goto-index .link:active,
+.container #main #breeds-dictionary #breeds-container .breeds .alphabetic-container .goto-index .link:visited {
     padding: 0.05rem 0.25rem;
     color: #0a0a0a;
 }
 
-.container #main #breeds-dictionary #breeds-container .alphabetic-container .goto-index .link:hover {
+.container #main #breeds-dictionary #breeds-container .breeds .alphabetic-container .goto-index .link:hover {
     color: #c4d7e0;
     background-color: #371b58;
     border-radius: 0.25rem;
 }
 
 /* Pantallas medianas a grandes */
-@media screen and (min-width: 768px) {
-    .container #main #breeds-dictionary #breeds-container {
+@media screen and (min-width: 576px) {
+    .container #main #breeds-dictionary #breeds-index .index-list  {
+        height: 10vh;
+    }
+
+    .container #main #breeds-dictionary #breeds-container .breeds {
         display: grid;
-        grid-template-columns: repeat(auto-fit, 300px);
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-rows: auto;
+        justify-content: center;
     }
 }
 
