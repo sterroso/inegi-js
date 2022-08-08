@@ -1,1 +1,5 @@
 env/*
+js/bingMaps.js
+js/pokemon.js
+.vscode/*
+resources.md
