@@ -192,10 +192,16 @@ const fillBreedsLists = async () => {
     const breedsFragment = document.createDocumentFragment();
 
     // Título para el fragmento de razas de perros.
-    const breedsFragmentTitle = document.createElement('h2');
-    breedsFragmentTitle.classList.add('breeds-container-title');
-    breedsFragmentTitle.textContent = 'Diccionario de Razas';
-    breedsFragment.appendChild(breedsFragmentTitle);
+    const breedsTitleContainer = document.createElement('div');
+    breedsTitleContainer.classList.add('breeds-title-container');
+    const breedsTitle = document.createElement('h2');
+    breedsTitle.classList.add('breeds-title');
+    breedsTitle.textContent = 'Diccionario de Razas';
+    breedsTitleContainer.appendChild(breedsTitle);
+    breedsFragment.appendChild(breedsTitleContainer);
+
+    const breedsDiv = document.createElement('div');
+    breedsDiv.classList.add('breeds');
 
     // Recorre el arreglo alfabético ...
     alphabetArray.forEach(letter => {
@@ -261,7 +267,7 @@ const fillBreedsLists = async () => {
             letterContainer.appendChild(indexLinkParagraph);
 
             // Agrega el elemento div en turno al fragmento de razas.
-            breedsFragment.appendChild(letterContainer);
+            breedsDiv.appendChild(letterContainer);
         }
     });
 
@@ -270,6 +276,8 @@ const fillBreedsLists = async () => {
 
     // Agrega el índice alfabético de razas al contenedor del diccionario de razas.
     breedsIndex.appendChild(alphabetFragment);
+
+    breedsFragment.appendChild(breedsDiv);
 
     // Agrega el diccionario de razas al contenedor del diccionario de razas.
     breedsContainer.appendChild(breedsFragment);
