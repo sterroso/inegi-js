@@ -32,7 +32,26 @@ loadPicturesButton.addEventListener('click', event => {
             picItem.setAttribute('src', link);
     
             picDiv.appendChild(picItem);
-    
+
+            // Agrega una liga para regresar al índice.
+            const topLinkParagraph = document.createElement('p');
+            topLinkParagraph.setAttribute('alt', 'Arriba');
+            topLinkParagraph.classList.add('go-top');
+
+            const topLink = document.createElement('a');
+            topLink.setAttribute('href', '#header');
+            topLink.classList.add('link');
+
+            const topLinkIcon = document.createElement('span');
+            topLinkIcon.classList.add('material-symbols-outlined');
+            topLinkIcon.textContent = 'arrow_upward';
+
+            topLink.appendChild(topLinkIcon);
+
+            topLinkParagraph.appendChild(topLink);
+
+            picDiv.appendChild(topLinkParagraph);
+
             picturesListFragment.appendChild(picDiv);
         });
     
