@@ -1,5 +1,5 @@
 // La URL de entrada a la API de imágenes de perros.
-const apiURL = 'https://dog.ceo/api';
+const apiURL = 'https://dog.ceo/api/';
 
 // Botón que desencadena el evento para llenar la lista de razas de perros.
 const getBreedsButton = document.getElementById('get-breeds');
@@ -20,6 +20,7 @@ const breedsContainer = document.getElementById('breeds-container');
 
 
 // Logo de sincronización
+// TODO: implementar animación del ícono mientras se carga la lista de razas de perros.
 const syncIcon = document.getElementById('sync-icon');
 
 
@@ -51,15 +52,6 @@ const apiDataType = {
         breedPosition: 1,
     },
 };
-
-
-const getPicturesUrl = breed => {
-    if (breed) {
-        return `${apiURL}/${breed}/images`;
-    }
-
-    return '#';
-}
 
 
 /**
@@ -205,13 +197,98 @@ const getAllSubBreeds = async (breed) => {
     }
 };
 
-const getBreedImageUrl = breed => {
-    return `${apiURL}/breed/${breed.toLowerCase()}/images`;
+
+/**
+ * Verifica que esté disponible un tipo de almacenamiento (localStorage | sessionStorage).
+ * 
+ * @param {string} type El tipo de storage que se quiere verificar: localStorage | sessionStorage
+ * @returns true si está disponible, false de lo contrario.
+ */
+ const storageAvailable = type => {
+    // El objeto donde se guarda la referencia al almacenamiento.
+    let storage;
+
+    // Intenta hacer una prueba de almacenamiento.
+    try {
+        storage = window[type];
+        const x = '__storageTest__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    } catch(e) {
+        return e instanceof DOMException && (
+            // No Firefox
+            e.code == 22 ||
+            // Firefox
+            e.code == 1014 ||
+            // Campo 'nombre' para casos en que el código de error
+            // no se especifica.
+            // No Firefox
+            e.name == 'QuotaExceededError' ||
+            // Firefox
+            e.name == 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // reporta error de Cuota Excedida  solo si ya hay datos guardados
+            (storage && storage.length !== 0);
+    }
 }
 
-const getSubBreedsUrl = breed => {
-    return `${apiURL}/breed/${breed.toLowerCase()}/list`;
+/**
+ * Guarda un objeto (registro), identificado por la llave (key) proporcionada,
+ * en el almacenamiento de Sesión (sessionStorage).
+ * 
+ * @param {string} key La llave que identificará al objeto (registro) guardado.
+ * @param {Object} record Registro de puntuación de un usuario.
+ * @param {string} storageType El tipo de almacenamiento en el que se guardará
+ * el objeto (registro).
+ * @returns true si se guardó el objeto (registro), false de lo contrario.
+ */
+ const saveRecord = (key, record, storageType) => {
+    if (storageAvailable(storageType)) {
+        let storage = window[storageType];
+        storage.setItem(key, JSON.stringify(record));
+    } else {
+        alert(`No está disponible el almacenamiento ${storageType}.`);
+        return false;
+    }
+
+    return true;
+};
+
+
+/**
+ * Devuelve un objeto, del almacenamiento proporcionado, identificado con la
+ * llave proporcionada.
+ * 
+ * @param {string} key Llave del registro que se desea cargar.
+ * @param {string} storageType Tipo de almacenamiento en el que se buscará el registro (objeto).
+ * @returns Un objeto JSON, del tipo de almacenamiento proporcionado, identificado por la 
+ * llave proporcionada. Devuelve nulo (null) si no existe un objeto identificado con la llave 
+ * proporcionada o no está disponible el almacenamiento de Sesión.
+ */
+const loadRecord = (key, storageType) => {
+    if (storageAvailable(storageType)) {
+        let storage = window[storageType];
+        return JSON.parse(storage.getItem(key));
+    }
+
+    return null;
+};
+
+
+/**
+ * Elimina un registro, identificado con la llave proporcionada, del almacenamiento 
+ * indicado.
+ * 
+ * @param {string} key Llave del registro a eliminar.
+ * @param {string} storageType Tipo de almacenamiento del que se desea remover el registro
+ */
+const removeRecord = (key, storageType) => {
+    if (storageAvailable(storageType)) {
+        let storage = window[storageType];
+        storage.removeItem(key);
+    }
 }
+
 
 /**
  * Crea la estructura del diccionario de razas de perros en el documento.
@@ -295,8 +372,17 @@ const fillBreedsLists = async () => {
                 breedListItem.classList.add('breed-item');
                 const breedLink = document.createElement('a');
                 breedLink.classList.add('link');
-                breedLink.setAttribute('href', getBreedImageUrl(breed[0]));
+                breedLink.setAttribute('href', 'views/pictures.html');
                 breedLink.textContent = breed[0];
+                breedLink.addEventListener('click', event => {
+                    if (storageAvailable('sessionStorage')) {
+                        const breedRecord = { breed: breed[0], };
+
+                        if (!saveRecord('breed', JSON.stringify(breedRecord), 'sessionStorage')) {
+                            event.preventDefault();
+                        }
+                    }
+                });
                 breedListItem.appendChild(breedLink);
                 // ... y lo agrega a la lista.
                 breedsList.appendChild(breedListItem);
@@ -324,6 +410,8 @@ const fillBreedsLists = async () => {
             breedsDiv.appendChild(letterContainer);
         }
     });
+
+
 
     // Agrega el índice alfabético al fragmento correspondiente.
     alphabetFragment.appendChild(indexList);
