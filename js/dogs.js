@@ -1,5 +1,5 @@
 // La URL de entrada a la API de imágenes de perros.
-const apiURL = 'https://dog.ceo/api/';
+const apiURL = 'https://dog.ceo/api';
 
 // Botón que desencadena el evento para llenar la lista de razas de perros.
 const getBreedsButton = document.getElementById('get-breeds');
@@ -14,11 +14,53 @@ getBreedsButton.addEventListener('click', event => {
 // Elemento div que contiene el índice del diccionario de razas de perros.
 const breedsIndex = document.getElementById('breeds-index');
 
+
 // Elemento div que contiene el contenido del diccionario de razas de perros.
 const breedsContainer = document.getElementById('breeds-container');
 
+
 // Logo de sincronización
 const syncIcon = document.getElementById('sync-icon');
+
+
+/**
+ * Pares llave/valor con todos los tipos de datos que se pueden obtener de 
+ * la API.
+ */
+const apiDataType = {
+    breeds: {
+        description: 'Lista de todas las razas.',
+        path: ['breeds', 'list', 'all'],
+        requiresBreed: false,
+    },
+    randomImage: {
+        description: 'Imagen aleatoria de cualquier raza.',
+        path: ['breeds', 'image', 'random'],
+        requiresBreed: false
+    },
+    allImagesByBreed: {
+        description: 'Todas las imágenes de una raza específica.',
+        path: ['breed', 'images'],
+        requiresBreed: true,
+        breedPosition: 1,
+    },
+    allSubBreeds: {
+        description: 'Lista de subrazas de una raza específica.',
+        path: ['breed', 'list'],
+        requiresBreed: true,
+        breedPosition: 1,
+    },
+};
+
+
+const getPicturesUrl = breed => {
+    if (breed) {
+        return `${apiURL}/${breed}/images`;
+    }
+
+    return '#';
+}
+
 
 /**
  * Devuelve todas las razas de perros registradas en la API.
@@ -163,6 +205,14 @@ const getAllSubBreeds = async (breed) => {
     }
 };
 
+const getBreedImageUrl = breed => {
+    return `${apiURL}/breed/${breed.toLowerCase()}/images`;
+}
+
+const getSubBreedsUrl = breed => {
+    return `${apiURL}/breed/${breed.toLowerCase()}/list`;
+}
+
 /**
  * Crea la estructura del diccionario de razas de perros en el documento.
  */
@@ -240,10 +290,14 @@ const fillBreedsLists = async () => {
                 }
             }).map(breed => {
                 // Para cada raza que cumple con el filtro ...
-                // ... crea un elemento li que contiene el nomnre de la raza ...
+                // ... crea un elemento li que contiene el nomnre de la raza, con una liga que lleva a una foto ...
                 const breedListItem = document.createElement('li');
                 breedListItem.classList.add('breed-item');
-                breedListItem.textContent = breed[0];
+                const breedLink = document.createElement('a');
+                breedLink.classList.add('link');
+                breedLink.setAttribute('href', getBreedImageUrl(breed[0]));
+                breedLink.textContent = breed[0];
+                breedListItem.appendChild(breedLink);
                 // ... y lo agrega a la lista.
                 breedsList.appendChild(breedListItem);
             });
