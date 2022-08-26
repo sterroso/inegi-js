@@ -4,10 +4,18 @@ const apiURL = 'https://dog.ceo/api/';
 // Botón que desencadena el evento para llenar la lista de razas de perros.
 const getBreedsButton = document.getElementById('get-breeds');
 
+// Ícono de sincronización
+const syncIcon = document.getElementById('sync-icon');
+
+
 /**
  * Llena el diccionario de razas de perros con los datos obtenidos en la API.
  */
 getBreedsButton.addEventListener('click', event => {
+    if (!syncIcon.classList.contains('in-sync')) {
+        syncIcon.classList.add('in-sync');
+    }
+
     fillBreedsLists();
 });
 
@@ -17,11 +25,6 @@ const breedsIndex = document.getElementById('breeds-index');
 
 // Elemento div que contiene el contenido del diccionario de razas de perros.
 const breedsContainer = document.getElementById('breeds-container');
-
-
-// Logo de sincronización
-// TODO: implementar animación del ícono mientras se carga la lista de razas de perros.
-const syncIcon = document.getElementById('sync-icon');
 
 
 /**
@@ -82,8 +85,13 @@ const getAllBreeds = async () => {
         return null;
 
     } catch (error) {
-        // Si hubo un error en la consulta se escribe el error en la consola.
-        console.error('No fue posible obtener la lista de razas del servidor.', error);
+        // Si hubo un error en la consulta se muestra el error en un Toast.
+        Toastify({
+            text: `No fue posible obtener la lista de razas del servidor:\n${error}`,
+            duration: 2500,
+            gravity: 'top',
+            position: 'right'
+        }).showToast();
     }
 }
 
@@ -115,8 +123,13 @@ const getRandomImage = async () => {
         return null;
 
     } catch (error) {
-        // Si hubo un error en la consulta se escribe el error en la consola.
-        console.error('No fue posible obetener la imagen del servidor.', error);
+        // Si hubo un error en la consulta se muestra el error en un Toast.
+        Toastify({
+            text: `No fue posible obetener la imagen del servidor:\n${error}`,
+            duration: 2500,
+            gravity: 'top',
+            position: 'right'
+        }).showToast();
     }
 }
 
@@ -153,8 +166,13 @@ const getAllImagesByBreed = async (breed) => {
         return null;
 
     } catch (error) {
-        // Si hubo un error en la consulta se escribe el error en la consola.
-        console.error(`No fue posible obtener las imágenes de la raza ${breed}.`, error);
+        // Si hubo un error en la consulta se muestra el error en un Toast.
+        Toastify({
+            text: `No fue posible obtener las imágenes de la raza ${breed}:\n${error}`,
+            duration: 2500,
+            gravity: 'top',
+            position: 'right'
+        }).showToast();
     }
 }
 
@@ -192,8 +210,13 @@ const getAllSubBreeds = async (breed) => {
         return null;
 
     } catch (error) {
-        // Si hubo un error en la consulta se escribe el error en la consola.
-        console.error(`No fue posible obtener la lista de subrazas correspondiente a la raza ${breed}.`, error);
+        // Si hubo un error en la consulta se muestra el error en un Toast.
+        Toastify({
+            text: `No fue posible obtener la lista de subrazas correspondiente a la raza ${breed}:\n${error}`,
+            duration: 2500,
+            gravity: 'top',
+            position: 'right'
+        }).showToast();
     }
 };
 
@@ -247,7 +270,12 @@ const getAllSubBreeds = async (breed) => {
         let storage = window[storageType];
         storage.setItem(key, JSON.stringify(record));
     } else {
-        alert(`No está disponible el almacenamiento ${storageType}.`);
+        Toastify({
+            text: `No está disponible el almacenamiento ${storageType}`,
+            duration: 2500,
+            gravity: 'top',
+            position: 'right'
+        }).showToast();
         return false;
     }
 
@@ -417,10 +445,18 @@ const fillBreedsLists = async () => {
     alphabetFragment.appendChild(indexList);
 
     // Agrega el índice alfabético de razas al contenedor del diccionario de razas.
+    breedsIndex.innerHTML = '';
     breedsIndex.appendChild(alphabetFragment);
 
     breedsFragment.appendChild(breedsDiv);
 
+    // Limpia el contenedor antes de agregar el fragmento.
+    breedsContainer.innerHTML = '';
+
     // Agrega el diccionario de razas al contenedor del diccionario de razas.
     breedsContainer.appendChild(breedsFragment);
+
+    if (syncIcon.classList.contains('in-sync')) {
+        syncIcon.classList.remove('in-sync');
+    }
 }

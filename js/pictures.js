@@ -5,6 +5,7 @@ const apiURL = 'https://dog.ceo/api/';
 const breed = {
     name: '',
     picsLinks: [],
+    picsLoaded: 0,
 };
 
 
@@ -16,11 +17,21 @@ const breedTitle = document.getElementById('breed-name');
 const picturesContainer = document.getElementById('pictures-container');
 
 
+// Ícono de sincronización
+const syncIcon = document.getElementById('sync-icon');
+
+
 // Botón para cargar las imágenes de los perros.
 const loadPicturesButton = document.getElementById('get-pictures');
 
-loadPicturesButton.addEventListener('click', event => {
-    if (breed.picsLinks) {
+loadPicturesButton.addEventListener('click', async event => {
+    if (!syncIcon.classList.contains('in-sync')) {
+        syncIcon.classList.add('in-sync');
+    }
+
+    breed.picsLinks = await getAllImagesByBreed(breed.name);
+
+    if (breed.picsLinks.length > 0) {
         const picturesListFragment = document.createDocumentFragment();
 
         breed.picsLinks.forEach(link => {
@@ -30,6 +41,16 @@ loadPicturesButton.addEventListener('click', event => {
             const picItem = document.createElement('img');
             picItem.classList.add('dog-picture');
             picItem.setAttribute('src', link);
+
+            picItem.addEventListener('load', event => {
+                breed.picsLoaded += 1;
+
+                if (breed.picsLoaded >= breed.picsLinks.length) {
+                    if (syncIcon.classList.contains('in-sync')) {
+                        syncIcon.classList.remove('in-sync');
+                    }
+                }
+            });
     
             picDiv.appendChild(picItem);
 
@@ -55,9 +76,14 @@ loadPicturesButton.addEventListener('click', event => {
             picturesListFragment.appendChild(picDiv);
         });
     
+        picturesContainer.innerHTML = '';
         picturesContainer.appendChild(picturesListFragment);
     } else {
-        console.error('No se encontró lista de imágenes.')
+        Toastify({
+            text: 'No se encontró lista de imágenes.',
+            gravity: 'top',
+            position: 'right'
+        }).showToast();
     }
 });
 
@@ -67,12 +93,12 @@ window.addEventListener('load', async event => {
         breed.name = JSON.parse(loadRecord('breed', 'sessionStorage')).breed;
 
         breedTitle.textContent = `${breed.name.charAt(0).toUpperCase()}${breed.name.substring(1)}`;
-
-        breed.picsLinks = await getAllImagesByBreed(breed.name);
-
-        console.debug(breed.picsLinks);
     } else {
-        console.error('No está disponible el almacenamiento.');
+        Toastify({
+            text: 'No está disponible el almacenamiento.',
+            gravity: 'top',
+            position: 'right'
+        }).showToast();
     }
 });
 
@@ -110,8 +136,12 @@ window.addEventListener('load', async event => {
         return null;
 
     } catch (error) {
-        // Si hubo un error en la consulta se escribe el error en la consola.
-        console.error(`No fue posible obtener las imágenes de la raza ${breed}.`, error);
+        // Si hubo un error en la consulta se muestra un Toast.
+        Toastify({
+            text: `No fue posible obtener las imágenes de la raza ${breed}:\n${error}`,
+            gravity: 'top',
+            position: 'right'
+        }).showToast();
     }
 }
 
@@ -164,7 +194,11 @@ window.addEventListener('load', async event => {
         let storage = window[storageType];
         storage.setItem(key, JSON.stringify(record));
     } else {
-        alert(`No está disponible el almacenamiento ${storageType}.`);
+        Toastify({
+            text: `No está disponible el almacenamiento ${storageType}.`,
+            gravity: 'top',
+            position: 'right'
+        }).showToast();
         return false;
     }
 

@@ -69,8 +69,8 @@ a {
     }
 }
 
-.container #header .button-container #get-breeds .in-sync {
-    animation: spin 0.5s infinite linear;
+.in-sync {
+    animation: spin 450ms infinite linear;
 }
 
 .container #header .button-container #get-breeds:hover,
@@ -101,9 +101,6 @@ a {
 .container #main #breeds-dictionary #breeds-index {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
-/* 
-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
- */
 
 .container #main #breeds-dictionary #breeds-index .index-title {
     background-color: #effffd;
