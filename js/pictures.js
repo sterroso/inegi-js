@@ -48,6 +48,13 @@ loadPicturesButton.addEventListener('click', async event => {
                 if (breed.picsLoaded >= breed.picsLinks.length) {
                     if (syncIcon.classList.contains('in-sync')) {
                         syncIcon.classList.remove('in-sync');
+
+                        Toastify({
+                            text: 'Se han cargado todas las imágenes',
+                            gravity: 'top',
+                            position: 'right',
+                            duration: 2500,
+                        }).showToast();
                     }
                 }
             });
